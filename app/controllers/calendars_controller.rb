@@ -15,7 +15,8 @@ class CalendarsController < ApplicationController
   private
 
   def plan_params
-    params.require(:calendars).permit(:date, :plan)
+    # ↓変更前：params.require(:calendars).permit(:date, :plan)
+    params.require(:calendars).permit(:content)
   end
 
   def getWeek
@@ -39,9 +40,19 @@ class CalendarsController < ApplicationController
         # ↓変更前：today_plans.push(plan.plan) if plan.date == @todays_date + x
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
+
+       #Date.today.wdayを利用して添字となる数値を得る
+      wday_num = Date.today.wday[day] 
+      #もしもwday_numが7以上であれば、7を引く
+      if #条件式を記述
+        wday_num = wday_num - 7
+      end
+      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans,wday: todays_date.wday}
+
       # ↓変更前：days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans}
       days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans}
       # ↓変更前：@week_days.push(days)
+
       @week_days.push(days)
     end
 
